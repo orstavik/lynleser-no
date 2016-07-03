@@ -1,3 +1,3 @@
 This is the new speed reader test for kids!
-
+Now I can Edit this file) Tom was here...
 Now also edited from the console.cloud.google.com.
