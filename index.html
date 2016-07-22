@@ -1,0 +1,33 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>rsvp-reader</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="/src/lynleser-app.html">
+    
+    <style is="custom-style" include="iron-flex iron-flex-alignment">
+      body {
+        margin: 0;
+        font-family: 'Roboto', 'Noto', sans-serif;
+        background-color: #efefef;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- <firebase-app
+      name="lynleser-no"
+      api-key="AIzaSyBJvpIuWTIO_oi_t7d2elKQZ52XL9MSJlc"
+      auth-domain="lynleser-no.firebaseapp.com"
+      database-url="https://lynleser-no.firebaseio.com">
+    </firebase-app> -->
+
+    <lynleser-app></lynleser-app>
+
+  </body>
+</html>

@@ -1,0 +1,60 @@
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+
+<dom-module id="text-input">
+  <template>
+    <style is="custom-style">
+      :host {
+        text-align: center;
+      }
+      paper-material {
+        background-color: #fff;
+        padding: 16px 20px;
+        margin: 14px;
+        border-radius: 2px;
+      }
+      paper-textarea {
+        text-align: left;
+        margin-bottom: 14px;
+      }
+    </style>
+    
+    <!-- <paper-textarea id="textarea51" label="Your text to read" on-change="_catchAndRelease"></paper-textarea>-->
+    <paper-material>
+      <paper-textarea label="Your text to read"
+                      id="textfield">
+      </paper-textarea>
+    </paper-material>
+
+  </template>
+
+
+  <script>
+    Polymer({
+
+      is: 'text-input',
+
+      properties: {
+
+        text: {
+          type: Array
+        },
+
+        fill: {
+          type: Boolean,
+          value: false
+        }
+
+      },
+
+      _getWords: function() {
+        if (this.$.textfield.value.length !== 0) {
+          var wordsLine = this.$.textfield.value;
+          this.text = wordsLine.split(/\s+/);
+        }
+        return this.text;
+      }
+
+    });
+  </script>
+</dom-module>

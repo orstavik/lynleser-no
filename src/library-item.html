@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="library-item">
+  <template>
+    <style is="custom-style">
+      :host {
+        display: block;
+      }
+      paper-material {
+        background-color: #fff;
+        margin: 10px;
+        height: 200px;
+        max-width: 500px;
+        border-radius: 2px;
+        position: relative;
+        cursor: pointer;
+      }
+      img {
+        height: 200px;
+        margin-right: 14px;
+        float: left;
+        border-bottom-left-radius: 2px;
+        border-top-left-radius: 2px;
+      }
+      h2 {
+        padding: 14px 20px 10px;
+        margin: 0;
+      }
+      p {
+        padding: 0 20px 14px;
+        margin: 0;
+      }
+    </style>
+    
+    <paper-material elevation="1">
+      <img src="/images/books/oz.jpg" alt="oz">
+      <h2>The Wonderful Wizard of Oz</h2>
+      <p>An American children's novel written by author L. Frank Baum and illustrated by W. W. Denslow, originally published by the George M. Hill Company in Chicago on May 17, 1900.</p>
+      <paper-ripple></paper-ripple>
+    </paper-material>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'library-item'
+
+    });
+  </script>
+</dom-module>

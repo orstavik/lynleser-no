@@ -1,0 +1,206 @@
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+
+<dom-module id="fab-controller">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment">
+      :host {
+        display: block;
+      }
+      paper-fab {
+        visibility: visible;
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background-color: var(--paper-indigo-a200);
+        transition: bottom 0.1s ease-in 0.1s,
+                    right 0.075s ease 0.1s,
+                    visibility 0.01s ease 0.1s;
+        z-index: 4;
+      }
+      :host([opened]) paper-fab {
+        visibility: hidden;
+        bottom: 0px;
+        right: calc(50% - 28px);
+        transition: bottom 0.075s ease 0.1s,
+                    right 0.1s ease-in 0.1s,
+                    visibility 0.01s ease 0.2s;
+      }
+      #menudiv {
+        visibility: hidden;
+        position: fixed;
+        bottom: 0px;
+        right: calc(50% - 28px);
+        width: 56px;
+        height: 56px;
+        background-color: var(--paper-indigo-a200);
+        color: var(--paper-brown-900);
+        border-radius: 28px;
+        z-index: 5;
+        transition: width 0.075s cubic-bezier(0.4, 0.0, 0.9, 1) 0.025s,
+                    right 0.075s cubic-bezier(0.4, 0.0, 0.9, 1) 0.025s,
+                    border-radius 0.025s linear,
+                    visibility 0.01s ease 0.1s;
+        @apply(--layout-horizontal);
+        @apply(--layout-around-justified);
+        @apply(--layout-center);
+      }
+      :host([opened]) #menudiv {
+        visibility: visible;
+        width: 100%;
+        right: 0;
+        border-radius: 0;
+        transition: width 0.075s cubic-bezier(0.4, 0.0, 0.9, 1) 0.2s,
+                    right 0.075s cubic-bezier(0.4, 0.0, 0.9, 1) 0.2s,
+                    border-radius 0.025s linear 0.275s,
+                    visibility 0.01s ease 0.2s;
+        @apply(--shadow-elevation-4dp);
+      }
+      :host([opened]) #textpos {
+        bottom: 56px;
+        visibility: visible;
+        transition: bottom 0.2s cubic-bezier(0.4, 0.0, 0.2, 1) 0.3s,
+                    visibility 0.1s ease 0.275s;
+      }
+      #textpos {
+        visibility: hidden;
+        position: fixed;
+        width: 100%;
+        height: 10px;
+        bottom: 46px;
+        background-color: #efefef;
+        z-index: 4;
+      }
+      #currentpos {
+        height: 130%;
+        width: 0%;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        border-right: 4px solid #3e2723;
+        transition-duration: 0.2s;
+      }
+      paper-icon-button {
+        transition-duration: 0.5s;
+      }
+      paper-icon-button[disabled] {
+        transition-duration: 0.5s;
+      }
+      paper-slider {
+        --paper-slider-knob-color: var(--paper-brown-900);
+        --paper-slider-knob-start-color: var(--paper-brown-900);
+        --paper-slider-knob-start-border-color: var(--paper-brown-900);
+        --paper-slider-active-color: var(--paper-brown-700);
+      }
+    </style>
+
+    <paper-fab icon="av:play-arrow"
+               id="fab"
+               on-tap="_goToRead"
+               on-down="_openMenu">
+    </paper-fab>
+    <div id="menudiv">
+      <paper-icon-button icon="av:skip-previous"
+                         style="margin-left: 10px"
+                         on-tap="_prev"
+                         id="prev"
+                         disabled>
+      </paper-icon-button>
+      <paper-icon-button icon="av:pause"
+                         on-tap="_startPause"
+                         id="pause"
+                         disabled>
+      </paper-icon-button>
+      <paper-icon-button icon="av:skip-next"
+                         on-tap="_next"
+                         id="next"
+                         disabled>
+      </paper-icon-button>
+      <paper-slider id="speeder"
+                    min="1"
+                    max="10"
+                    value="1">
+      </paper-slider>
+    </div>
+    <div id="textpos">
+      <div id="currentpos"></div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'fab-controller',
+
+      properties: {
+        parent: {
+          type: Object
+        },
+        opened: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          reflectToAttribute: true
+        }
+      },
+
+      listeners: {
+        "speeder.value-change": "_setSpeed"
+      },
+
+      attached: function() {
+        this.parent = document.querySelector("lynleser-app");
+      },
+
+      _goToRead: function() {
+        this.parent.$.readpage._toggleOpened();
+        this.opened = !this.opened;
+
+        if (this.opened) {
+          this.parent.$.backicon.style.width = "40px";
+        }
+        else {
+          this.parent.$.backicon.style.width = "0";
+        }
+
+        if (this.parent.$.readpage.opened && !this.parent.$.readpage.reading) {
+          this._readIt();
+        }
+      },
+
+      _readIt: function() {
+        var wordsToRead = this.parent.$.wordsinput._getWords();
+        this.parent.$.readpage.words = wordsToRead;
+        this.parent.$.readpage.word = "";
+        var self = this.parent;
+        setTimeout(function() {
+          self.$.readpage._displayWords();
+        }, 750);
+      },
+
+      _openMenu: function() {
+        this.$.fab.$.icon.style.transitionDuration = "0.25s";
+        if (this.parent.$.readpage.opened) {
+        }
+      },
+
+      _setSpeed: function() {
+        this.parent = document.querySelector("lynleser-app");
+        this.parent.$.readpage.speed = 1000/this.$.speeder.value;
+      },
+
+      _startPause: function() {
+        this.parent.$.readpage._playPause();
+      },
+
+      _prev: function() {
+        this.parent.$.readpage._prev();
+      },
+
+      _next: function() {
+        this.parent.$.readpage._next();
+      }
+
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,7 @@
+{
+  "name": "rsvp-reader",
+  "short_name": "rsvp-reader",
+  "description": "Read it faster",
+  "start_url": "/",
+  "display": "standalone"
+}

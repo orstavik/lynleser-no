@@ -1,0 +1,122 @@
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+
+<dom-module id="fab-controller">
+  <template>
+    <style is="custom-style">
+      :host {
+        display: block;
+      }
+      paper-fab {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background-color: var(--paper-indigo-a200);
+        transition-duration: 0.5s;
+        transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+        z-index: 4;
+      }
+      #rail {
+        display: inline-block;
+        position: fixed;
+        bottom: 47px;
+        right: 47px;
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        background-color: var(--paper-amber-a100);
+        box-shadow: 0 0 4px 0px rgba(0, 0, 0, 0.6) inset;
+        transition-duration: 0.3s;
+        transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+        z-index: 3;
+      }
+    </style>
+
+    <paper-fab icon="icons:arrow-forward"
+               id="fab"
+               on-tap="_goToRead"
+               on-down="_fabDown"
+               on-track="_fabTrack"
+               on-up="_fabUp">
+    </paper-fab>
+
+    <div id="rail"></div>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'fab-controller',
+
+      properties: {
+        parent: {
+          type: Object
+        },
+      },
+
+      attached: function() {
+        this.parent = document.querySelector("lynleser-app");
+      },
+
+      _goToRead: function() {
+        this.parent.$.readpage._toggleOpened();
+        if (this.parent.$.readpage.opened && !this.parent.$.readpage.reading) {
+          this.$.fab.$.icon.style.transform = "rotate(-180deg)";
+          this._readIt();
+        }
+      },
+
+      _readIt: function() {
+        var wordsToRead = this.parent.$.wordsinput._getWords();
+        this.parent.$.readpage.words = wordsToRead;
+        this.parent.$.readpage.word = "";
+        var self = this.parent;
+        setTimeout(function() {
+          self.$.readpage._displayWords();
+        }, 750);
+      },
+
+      _fabDown: function() {
+        this.$.fab.$.icon.style.transitionDuration = "0.25s";
+        if (this.parent.$.readpage.opened) {
+          var self = this;
+          self.fabtime = setTimeout(function() {
+            self.$.rail.style.height = "100px";
+            self.$.fab.$.icon.style.transform = "rotate(-90deg)";
+          }, 100);
+        }
+      },
+
+      _fabTrack: function(e) {
+        switch(e.detail.state) {
+          case 'track':
+            if (this.parent.$.readpage.opened) {
+              if (!this.y0) this.y0 = e.detail.y;
+              else this.y = this.y0 - e.detail.y;
+              if (this.y >= 100) this.y = 100;
+              if (this.y <= 0) this.y = 0;
+
+              this.parent.$.readpage.speed = (-this.y+200)*3.5; // speed regulation
+
+              this.$.fab.style.bottom = this.y+24+"px";
+              this.$.fab.style.transitionProperty = "none";
+            };
+            break;
+          case 'end':
+            this.$.fab.style.bottom = "24px";
+            this.$.fab.style.transitionProperty = "bottom";
+            this.$.fab.$.icon.style.transform = "rotate(-180deg)";
+            break;
+        }
+      },
+
+      _fabUp: function() {
+        clearTimeout(this.fabtime);
+        this.$.rail.style.height = "10px";
+        this.$.fab.$.icon.style.transform = "rotate(0deg)";
+      },
+
+    });
+  </script>
+</dom-module>

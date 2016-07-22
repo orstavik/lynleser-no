@@ -1,0 +1,37 @@
+<link rel="import" href="library-item.html">
+
+<dom-module id="the-library">
+  <template>
+    <style is="custom-style">
+      :host {
+        text-align: left;
+      }
+    </style>
+
+    <!-- <firebase-query
+      id="query"
+      app-name="lynleser-no"
+      path="/books/[[uid]]"
+      data="{{data}}">
+    </firebase-query> -->
+
+    <!-- <template is="dom-repeat" items="{{data}}" as="book">
+      <p book-data="{{book}}"></p>
+    </template> -->
+    <library-item></library-item>
+
+  </template>
+
+
+  <script>
+    Polymer({
+
+      is: 'the-library',
+
+      properties: {
+
+      }
+
+    });
+  </script>
+</dom-module>

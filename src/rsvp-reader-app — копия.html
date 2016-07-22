@@ -1,0 +1,195 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../../bower_components/app-layout/app-scroll-effects/app-scroll-effects-behavior.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+
+<link rel="import" href="text-input.html">
+<link rel="import" href="text-output.html">
+<link rel="import" href="text-timer.html">
+<link rel="import" href="the-jungle-book.html">
+
+<dom-module id="rsvp-reader-app">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-reverse iron-flex-alignment iron-flex-factors iron-positioning">
+      :host {
+        display: block;
+      }
+      app-toolbar {
+        background-color: var(--paper-indigo-500);
+        color: white;
+      }
+      paper-material {
+        background-color: #fff;
+        padding: 16px 20px;
+        margin: 14px;
+        border-radius: 2px;
+      }
+      .menu-item:hover {
+        background-color: rgba(0,0,0,0.2)
+      }
+      .menu-item {
+        display: block;
+        position: relative;
+        line-height: 50px;
+        margin: 5px 0;
+        padding: 0 20px;
+        cursor: pointer;
+      }
+      paper-button.read {
+        margin-top: 20px;
+        background-color: var(--paper-green-500);
+        color: white;
+      }
+      #text-out {
+        min-height: 40px;
+        text-align: center;
+      }
+    </style>
+
+    <app-location id="applocation"
+                  route="{{route}}"
+                  use-hash-as-path>
+    </app-location>
+
+    <app-route route="{{route}}"
+               pattern="/:page"
+               data="{{pageData}}"
+               active="{{pageActive}}">
+    </app-route>
+    
+    <app-drawer-layout force-narrow>
+
+      <app-drawer id="drawer">
+
+        <app-toolbar></app-toolbar>
+
+        <iron-selector id="ironselector" selected="{{pageData.page}}"
+                       attr-for-selected="data-page">
+          <a class="menu-item"
+             data-page="text-input"
+             href="/text-input"
+             drawer-toggle>Text Input
+            <paper-ripple></paper-ripple>
+          </a>
+          <a class="menu-item"
+             data-page="the-jungle-book"
+             href="/the-jungle-book"
+             drawer-toggle>The Jungle Book
+            <paper-ripple></paper-ripple>
+          </a>
+          <a class="menu-item"
+             data-page="text-output"
+             href="/text-output"
+             drawer-toggle>Text Output
+            <paper-ripple></paper-ripple>
+          </a>
+        </iron-selector>
+
+      </app-drawer>
+      
+      <app-header-layout>
+
+        <app-header class="main-header" fixed effects="waterfall">
+
+          <app-toolbar>
+            <paper-icon-button id="navicon" icon="menu" drawer-toggle></paper-icon-button>
+            <!-- flex class forces span to fill space between icon -->
+            <div main-title>RSVP-Reader</div>
+          </app-toolbar>
+
+        </app-header>
+
+        <div>
+          <!-- Main content goes here -->
+          <paper-material elevation="1">
+
+            <iron-pages selected="{{pageData.page}}"
+                        attr-for-selected="data-page">
+
+              <text-input data-page="text-input"
+                          id="input1"
+                          on-readit="_readit"></text-input>
+              <the-jungle-book data-page="the-jungle-book"
+                               id="the-jungle-book"
+                               on-readit="_readit"></the-jungle-book>
+              <text-output data-page="text-output" 
+                           word="[[word2]]"
+                           id="text-out"></text-output>
+
+            </iron-pages>
+
+            <text-timer on-time-out="_read" id="time1"></text-timer>
+            
+          </paper-material>
+
+        </div>
+
+      </app-header-layout>
+
+    </app-drawer-layout>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'rsvp-reader-app',
+
+      properties: {
+        word2: {
+          type: String,
+        },
+        onScreen: {
+          type: String,
+        }
+      },
+      _calcspeed: function() {
+
+      },
+      _dothis: function() {
+        var remainwords = this.$.input1.text;
+        this._toberead = remainwords;
+        this._read();
+      },
+
+      attached: function() {
+        this._dothis();
+      //   var remainwords = this.$.input1.text;
+      //   var thiz = this;
+      //   setInterval(function() {
+      //     /*thiz.properties.word2.value = remainwords.pop();*/
+      //     thiz.set("word2", remainwords.shift());
+      //   }, 1000);
+      },
+
+      _readit: function(e, detail) {
+        this._toberead = e.detail.text;
+        this.$.ironselector.select("text-output");
+        this._read();
+      },
+
+      _toberead: [],
+
+      _read: function() {
+        this.set("word2", this._toberead.shift());
+        this.$.time1.wakeup(250);
+      }
+
+    });
+  </script>
+</dom-module>

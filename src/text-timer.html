@@ -1,0 +1,38 @@
+<dom-module id="text-timer">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <text-dictionary></text-dictionary>
+    <speed-controller></speed-controller>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'text-timer',
+
+      properties: {
+        word: {
+          type: String
+        },
+      },
+      wakeup: function(ms) {
+        var thiz = this;
+        setTimeout(function() {
+          thiz.fire("time-out", "hello");
+        }, ms);
+      },
+      // attached: function() {
+      //   var thiz = this;
+      //   setInterval(function() {
+      //     thiz.fire("time-out", "hello");
+      //   }, 1000);
+      // }
+    });
+  </script>
+</dom-module>

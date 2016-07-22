@@ -1,0 +1,223 @@
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/iron-icons/av-icons.html">
+
+<dom-module id="text-output">
+  <template>
+    <style>
+      :host {
+        position: fixed;
+        bottom: 52px;
+        right: 52px;
+        width: 0;
+        height: 0;
+        background-color: var(--paper-brown-500);
+        color: #efefef;
+        border-radius: 50%;
+        @apply(--shadow-elevation-3dp);
+        transition-duration: 0.4s;
+        transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+        z-index: 1;
+      }
+      :host([opened]) {
+        bottom: calc(52px - 250vw);
+        right: calc(52px - 250vw);
+        width: 500vw;
+        height: 500vw;
+      }
+      #textwrap {
+        position: fixed;
+        display: block;
+        visibility: hidden;
+        width: 100%;
+        top: 38%;
+        left: 0%;
+        opacity: 0;
+        transition-duration: 0.15s;
+        transition-timing-function: ease;
+      }
+      :host([opened]) #textwrap {
+        visibility: visible;
+        top: 40%;
+        left: 0%;
+        opacity: 1;
+        transition-delay: 0.2s;
+        transition-duration: 0.15s;
+        transition-timing-function: ease;
+      }
+      #textvalue {
+        text-align: center;
+        cursor: context-menu;
+      }
+      #previewprev {
+        position: absolute;
+        bottom: 100px;
+        padding: 0 14px;
+        font-size: 12px;
+        color: var(--paper-brown-200);
+      }
+      #previewnext {
+        position: absolute;
+        top: 110px;
+        padding: 0 14px;
+        font-size: 12px;
+        color: var(--paper-brown-200);
+        text-align: right;
+      }
+    </style>
+    
+    <div id="textwrap">
+      <p id="previewprev"></p>
+      <h1 id="textvalue">[[word]]</h1>
+      <p id="previewnext"></p>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'text-output',
+
+      properties: {
+        word: {
+          type: String,
+          value: 'Nothing to read'
+        },
+        words: {
+          type: Array,
+        },
+        i: {
+          type: Number,
+          value: -1,
+          observer: "_textPos"
+        },
+        speed: {
+          type: Number,
+          value: 700
+        },
+        opened: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          reflectToAttribute: true
+        },
+        target: {
+          type: String
+        },
+        pause: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          reflectToAttribute: true
+        },
+        reading: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          reflectToAttribute: true
+        },
+        finished: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          reflectToAttribute: true
+        },
+      },
+
+      _toggleOpened: function() {
+        this.opened = !this.opened;
+      },
+
+      _displayWords: function() {
+        this.reading = true;
+        if (this.i+1 < this.words.length) {
+          this.i += 1;
+          this.word = this.words[this.i];
+          document.querySelector("#pause").disabled = false;
+          this.$.textvalue.style.color = "#efefef";
+          var self = this;
+          self.wordTime = setTimeout(function() {
+            self._displayWords();
+          }, this.speed);
+        }
+        else {
+          this.i += 1;
+          this.word = "Done!";
+          this.$.textvalue.style.color = "#76FF03";
+          document.querySelector("#pause").setAttribute("icon", "av:replay");
+          document.querySelector("#prev").disabled = false;
+          document.querySelector("#next").disabled = true;
+          this.pause = true;
+          this.finished = true;
+        }
+      },
+
+      _playPause: function() {
+        if (this.finished !== true) {
+          this.pause = !this.pause;
+          if (this.pause) {
+            clearTimeout(this.wordTime);
+            this.$.previewprev.innerText = this.words.slice((this.i>40 ? this.i-40 : 0), this.i).join(" ")+" ...";
+            this.$.previewnext.innerText = "... "+this.words.slice(this.i+1, this.i+41).join(" ");
+            document.querySelector("#pause").setAttribute("icon", "av:play-arrow");
+            document.querySelector("#prev").disabled = false;
+            document.querySelector("#next").disabled = false;
+          }
+          else {
+            this._displayWords();
+            this.$.previewprev.innerText = "";
+            this.$.previewnext.innerText = "";
+            document.querySelector("#pause").setAttribute("icon", "av:pause");
+            document.querySelector("#prev").disabled = true;
+            document.querySelector("#next").disabled = true;
+          }
+        }
+        else {
+          this.i = -1;
+          this.fire("replay", null);
+          this.pause = false;
+          this.finished = false;
+          this.$.previewprev.innerText = "";
+          this.$.previewnext.innerText = "";
+          document.querySelector("#pause").setAttribute("icon", "av:pause");
+          document.querySelector("#prev").disabled = true;
+        }
+      },
+
+      _prev: function() {
+        this.i -= 1;
+        this.word = this.words[this.i];
+        this.$.previewprev.innerText = this.words.slice((this.i>40 ? this.i-40 : 0), this.i).join(" ")+" ...";
+        this.$.previewnext.innerText = "... "+this.words.slice(this.i+1, this.i+41).join(" ");
+        this.$.textvalue.style.color = "#efefef";
+        document.querySelector("#next").disabled = false;
+        document.querySelector("#pause").setAttribute("icon", "av:play-arrow");
+        this.finished = false;
+      },
+
+      _next: function() {
+        this.i += 1;
+        if (this.i >= this.words.length) {
+          this.word = "Done!";
+          this.$.textvalue.style.color = "#76FF03";
+          this.$.previewnext.innerText = "";
+          document.querySelector("#next").disabled = true;
+          document.querySelector("#pause").setAttribute("icon", "av:replay");
+          this.finished = true;
+        }
+        else {
+          this.$.previewprev.innerText = this.words.slice((this.i>40 ? this.i-40 : 0), this.i).join(" ")+" ...";
+          this.$.previewnext.innerText = "... "+this.words.slice(this.i+1, this.i+41).join(" ");
+          this.word = this.words[this.i];
+        }
+      },
+
+      _textPos: function() {
+        if (document.querySelector("#currentpos")) {
+          document.querySelector("#currentpos").style.width = "calc(" + ((this.i+1)/this.words.length)*100 + "% - 4px)";
+        }
+      }
+
+    });
+  </script>
+</dom-module>

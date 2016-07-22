@@ -1,0 +1,62 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="fab-ripple">
+  <template>
+    <style is="custom-style">
+      :host {
+        position: fixed;
+        bottom: 52px;
+        right: 52px;
+        width: 0;
+        height: 0;
+        background-color: var(--paper-pink-500);
+        border-radius: 50%;
+        @apply(--shadow-elevation-3dp);
+        transition-duration: 0.7s;
+        transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+        z-index: 1;
+      }
+      :host([opened]) {
+        bottom: calc(52px - 250vw);
+        right: calc(52px - 250vw);
+        width: 500vw;
+        height: 500vw;
+      }
+    </style>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'fab-ripple',
+
+      properties: {
+
+        opened: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          reflectToAttribute: true
+        },
+        target: {
+          type: String
+        }
+
+      },
+
+      attached: function() {
+        target = document.querySelector("#"+this.target);
+        var self = this;
+        target.addEventListener("click", function() {
+          self._toggleOpened.call(self);
+        }, false );
+      },
+
+      _toggleOpened: function() {
+        this.opened = !this.opened;
+      }
+
+    });
+  </script>
+</dom-module>
