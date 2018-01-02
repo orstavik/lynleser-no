@@ -1,44 +1,43 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
-
 <dom-module id="library-item">
   <template>
     <style is="custom-style">
       :host {
         display: block;
       }
-      paper-material {
+      :host paper-material {
+        height: auto;
         background-color: #fff;
-        margin: 10px;
-        height: 200px;
-        max-width: 500px;
+        color: #212121;
+        margin: 0.5em 1em;
+        padding: 0.5em;
         border-radius: 2px;
-        position: relative;
-        cursor: pointer;
+        overflow: hidden;
+        transition-duration: 0.5s;
+        transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);;
       }
-      img {
-        height: 200px;
-        margin-right: 14px;
-        float: left;
-        border-bottom-left-radius: 2px;
-        border-top-left-radius: 2px;
+      :host[opened] paper-material {
+        height: 50vh;
+        max-height: 100vh;
       }
-      h2 {
-        padding: 14px 20px 10px;
+      h3 {
         margin: 0;
       }
       p {
-        padding: 0 20px 14px;
-        margin: 0;
+        margin: 6px 0;
+        color: #757575;
+        font-size: 14px;
+      }
+      .buttonwrap {
+        text-align: right;
       }
     </style>
     
     <paper-material elevation="1">
-      <img src="/images/books/oz.jpg" alt="oz">
-      <h2>The Wonderful Wizard of Oz</h2>
-      <p>An American children's novel written by author L. Frank Baum and illustrated by W. W. Denslow, originally published by the George M. Hill Company in Chicago on May 17, 1900.</p>
-      <paper-ripple></paper-ripple>
+      <h3 id="booktitle">[[title]]</h3>
+      <p id="bookbody"></p>
+      <div class="buttonwrap">
+        <paper-button on-tap="_readText">Read it!</paper-button>
+      </div>
     </paper-material>
 
   </template>
@@ -46,7 +45,30 @@
   <script>
     Polymer({
 
-      is: 'library-item'
+      is: 'library-item',
+
+      properties: {
+        title: {
+          type: String,
+          value: '',
+          notify: true
+        },
+        body: {
+          type: String,
+          value: '',
+          notify: true
+        }
+      },
+
+      attached: function() {
+        this.$.bookbody.innerHTML = this.body.substring(0, 100)+"...";
+      },
+
+      _readText: function() {
+        this.parent = document.querySelector("lynleser-app");
+        this.text = this.body.split(/\s+/);
+        this.parent.$.joystick._goToRead(this.text);
+      }
 
     });
   </script>

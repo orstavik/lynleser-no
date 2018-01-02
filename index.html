@@ -8,9 +8,9 @@
     <link rel="manifest" href="/manifest.json">
     <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
-    <link rel="import" href="/src/lynleser-app.html">
-    
-    <style is="custom-style" include="iron-flex iron-flex-alignment">
+    <link rel="import" href="/lynleser-elements.html">
+
+    <style is="custom-style">
       body {
         margin: 0;
         font-family: 'Roboto', 'Noto', sans-serif;
@@ -20,12 +20,23 @@
   </head>
   <body>
 
-    <!-- <firebase-app
+    <!-- <platinum-sw-register
+      auto-register
+      skip-waiting
+      clients-claim
+      reload-on-install
+      href="../sw-import.js">
+      <platinum-sw-cache
+        default-cache-strategy="networkFirst">
+      </platinum-sw-cache>
+    </platinum-sw-register> -->
+
+    <firebase-app
       name="lynleser-no"
       api-key="AIzaSyBJvpIuWTIO_oi_t7d2elKQZ52XL9MSJlc"
       auth-domain="lynleser-no.firebaseapp.com"
       database-url="https://lynleser-no.firebaseio.com">
-    </firebase-app> -->
+    </firebase-app>
 
     <lynleser-app></lynleser-app>
 

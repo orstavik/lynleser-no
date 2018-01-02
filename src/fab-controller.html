@@ -1,5 +1,3 @@
-<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
-
 <dom-module id="fab-controller">
   <template>
     <style is="custom-style" include="iron-flex iron-flex-alignment">
@@ -65,19 +63,9 @@
         visibility: hidden;
         position: fixed;
         width: 100%;
-        height: 10px;
         bottom: 46px;
-        background-color: #efefef;
         z-index: 4;
-      }
-      #currentpos {
-        height: 130%;
-        width: 0%;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        border-right: 4px solid #3e2723;
-        transition-duration: 0.2s;
+        transition: visibility 0.1s ease;
       }
       paper-icon-button {
         transition-duration: 0.5s;
@@ -117,13 +105,11 @@
       </paper-icon-button>
       <paper-slider id="speeder"
                     min="1"
-                    max="10"
+                    max="100"
                     value="1">
       </paper-slider>
     </div>
-    <div id="textpos">
-      <div id="currentpos"></div>
-    </div>
+    <paper-progress id="textpos" value="0"></paper-progress>
 
   </template>
 
@@ -141,6 +127,9 @@
           value: false,
           notify: true,
           reflectToAttribute: true
+        },
+        wordsArray: {
+          type: Array
         }
       },
 
@@ -152,7 +141,8 @@
         this.parent = document.querySelector("lynleser-app");
       },
 
-      _goToRead: function() {
+      _goToRead: function(wordsArray) {
+        if (!Array.isArray(wordsArray)) wordsArray = undefined;
         this.parent.$.readpage._toggleOpened();
         this.opened = !this.opened;
 
@@ -164,13 +154,16 @@
         }
 
         if (this.parent.$.readpage.opened && !this.parent.$.readpage.reading) {
-          this._readIt();
+          this._readIt(wordsArray);
         }
       },
 
-      _readIt: function() {
-        var wordsToRead = this.parent.$.wordsinput._getWords();
-        this.parent.$.readpage.words = wordsToRead;
+      _readIt: function(wordsToRead) {
+        if (wordsToRead == undefined) {
+          if (this.wordsArray == undefined) this.wordsArray = this.parent.$.wordsinput._getWords();
+        }
+        else this.wordsArray = wordsToRead;
+        this.parent.$.readpage.words = this.wordsArray;
         this.parent.$.readpage.word = "";
         var self = this.parent;
         setTimeout(function() {

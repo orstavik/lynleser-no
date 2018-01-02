@@ -1,5 +1,3 @@
-<link rel="import" href="library-item.html">
-
 <dom-module id="the-library">
   <template>
     <style is="custom-style">
@@ -8,18 +6,26 @@
       }
     </style>
 
-    <!-- <firebase-query
+    <firebase-query
       id="query"
       app-name="lynleser-no"
-      path="/books/[[uid]]"
+      path="/books"
       data="{{data}}">
-    </firebase-query> -->
+    </firebase-query>
 
-    <!-- <template is="dom-repeat" items="{{data}}" as="book">
-      <p book-data="{{book}}"></p>
-    </template> -->
-    <library-item></library-item>
+    <!-- <app-indexeddb-mirror
+      data="{{data}}"
+      persisted-data="{{persistedData}}">
+    </app-indexeddb-mirror> -->
 
+    <template is="dom-repeat" items="{{data}}" as="book">
+      <library-item
+        id$="[[book.$key]]"
+        title="[[book.title]]"
+        body="[[book.body]]">
+      </library-item>
+    </template>
+    
   </template>
 
 

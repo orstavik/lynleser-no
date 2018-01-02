@@ -1,0 +1,52 @@
+<dom-module id="lynleser-signin">
+  <template>
+    <style>
+      :host {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #fefefe;
+        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1;
+        color: var(--paper-brown-700);
+        z-index: 10;
+
+        @apply(--layout);
+        @apply(--layout-center-center);
+      }
+
+      :host([signed-in]) {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      paper-button > * {
+        vertical-align: middle;
+        text-transform: none;
+      }
+    </style>
+    <paper-button on-tap="signIn">
+      <iron-icon icon="account-circle"></iron-icon>
+      <span>Sign in with Google</span>
+    </paper-button>
+  </template>
+  <script>
+    Polymer({
+      is: 'lynleser-signin',
+
+      properties: {
+        signedIn: {
+          type: Boolean,
+          reflectToAttribute: true,
+          value: false
+        }
+      },
+
+      signIn: function() {
+        this.fire('sign-in', null, { bubbles: false });
+      }
+    });
+  </script>
+</dom-module>
