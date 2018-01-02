@@ -1,0 +1,32 @@
+[debug] [2018-01-02T07:40:30.224Z] ----------------------------------------------------------------------
+[debug] [2018-01-02T07:40:30.226Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\fales\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve
+[debug] [2018-01-02T07:40:30.227Z] CLI Version:   3.16.0
+[debug] [2018-01-02T07:40:30.227Z] Platform:      win32
+[debug] [2018-01-02T07:40:30.227Z] Node Version:  v9.2.0
+[debug] [2018-01-02T07:40:30.227Z] Time:          Tue Jan 02 2018 09:40:30 GMT+0200 (FLE Standard Time)
+[debug] [2018-01-02T07:40:30.227Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-01-02T07:40:30.237Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-01-02T07:40:30.237Z] > authorizing via signed-in user
+[debug] [2018-01-02T07:40:30.239Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/lynleser-no  
+  
+ Tue Jan 02 2018 09:40:30 GMT+0200 (FLE Standard Time)
+[debug] [2018-01-02T07:40:31.081Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-02T07:40:31.082Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/lynleser-no/tokens  
+  
+ Tue Jan 02 2018 09:40:31 GMT+0200 (FLE Standard Time)
+[debug] [2018-01-02T07:40:31.989Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'E:\Programming\Polymer\interText\lynleser-no'...
+[info] 
+[debug] [2018-01-02T07:40:31.992Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/lynleser-no  
+  
+ Tue Jan 02 2018 09:40:31 GMT+0200 (FLE Standard Time)
+[debug] [2018-01-02T07:40:32.906Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-02T07:40:32.907Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/585933289193/clients/_:getWebAppConfig  
+  
+ Tue Jan 02 2018 09:40:32 GMT+0200 (FLE Standard Time)
+[debug] [2018-01-02T07:40:34.013Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] +  hosting: Local server: http://localhost:5000
+
